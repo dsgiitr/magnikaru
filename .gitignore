@@ -1,0 +1,12 @@
+__pycache__/
+
+data/
+lightning_check/
+lightning_logs/
+check/
+notebooks/
+scripts/
+
+
+utils.py
+testing.py
