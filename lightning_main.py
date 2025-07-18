@@ -5,7 +5,7 @@ import os
 
 from model import ChessCNN, ChessDualDatasetNew
 from torch.utils.data import DataLoader
-from lightning_model import LitCNN, ChessDM
+from lightning_model import LitCNN, ChessDM, ChessNewDM
 from preprocess import get_dataloader
 
 
@@ -30,7 +30,8 @@ torch.set_float32_matmul_precision('medium')
 
 if __name__ == "__main__":
     
-    dm = ChessDM(batch_size=cf.BATCH_SIZE)
+    # dm = ChessDM(batch_size=cf.BATCH_SIZE)
+    dm = ChessNewDM(train_csv=cf.TRAIN_PATH,test_csv=cf.TEST_PATH,batch_size=cf.BATCH_SIZE)
     pytorchModel = ChessCNN()
     model = LitCNN(model=pytorchModel, lr=learning_rate)
     
@@ -52,8 +53,8 @@ if __name__ == "__main__":
             datamodule=dm
         )
 
-        test_acc = trainer.test(model=model, dataloaders=dm.train_dataloader())[0]['accuracy']
-        train_acc = trainer.test(model=model, dataloaders=dm.test_dataloader())[0]['accuracy']
+        train_acc = trainer.test(model=model, dataloaders=dm.train_dataloader())[0]['accuracy']
+        test_acc = trainer.test(model=model, dataloaders=dm.test_dataloader())[0]['accuracy']
         print(f"Test accuracy: {test_acc} | Train accuracy: {train_acc}")
         
         FILE_NAME = os.path.join("lightning_check",f"train2_it_{iterations}_epoch_{cf.NUM_EPOCHS}_lr_{cf.LEARNING_RATE}.ckpt")
