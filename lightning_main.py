@@ -3,20 +3,9 @@ import lightning as L
 import config as cf
 import os
 
-from model import ChessCNN, ChessDualDatasetNew
-from torch.utils.data import DataLoader
+from model import ChessCNN
 from lightning_model import LitCNN, ChessDM, ChessNewDM
-from preprocess import get_dataloader
 
-
-
-# train_loader, test_loader = get_dataloader(K=1)
-
-# train_ds = ChessDualDatasetNew(train=True, K=0)
-# test_ds = ChessDualDatasetNew(train=False, K=0)
-
-# train_loader = DataLoader(dataset=train_ds, batch_size=cf.BATCH_SIZE, shuffle=True)
-# test_loader = DataLoader(dataset=test_ds, batch_size=cf.BATCH_SIZE, shuffle=False)
 
 input_size = 28*28
 hidden_size = 100
@@ -44,10 +33,6 @@ if __name__ == "__main__":
             reload_dataloaders_every_n_epochs=1
         )
         
-        # trainer.fit(
-        #     model=model,
-        #     train_dataloaders=train_loader,  
-        # )
         trainer.fit(
             model=model,
             datamodule=dm

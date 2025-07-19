@@ -60,6 +60,7 @@ class LitCNN(L.LightningModule):
         return optimizer
     
 
+# Datamodule using pytorch dataset
 class ChessDM(L.LightningDataModule):
     def __init__(self, data_dir= "./data", batch_size = 32, K:int = 0):
         super().__init__()
@@ -68,10 +69,6 @@ class ChessDM(L.LightningDataModule):
         self.train_csv = os.path.join("data","preprocessed","train.csv")
         self.test_csv = os.path.join("data","preprocessed","test.csv")
         self.K = K
-           
-    def setup(self, stage: str):
-        sample_K = self.trainer.current_epoch
-        self.chess_test = ChessDualDatasetNew(train=False, K=sample_K)
 
     def train_dataloader(self):
         print("Current epoch: ",self.trainer.current_epoch)
@@ -89,20 +86,15 @@ class ChessDM(L.LightningDataModule):
         self.chess_predict = ChessDualDatasetNew(train=True, K=sample_K)
         return DataLoader(self.chess_predict, batch_size=self.batch_size, shuffle=False)
     
-    
+
+# Datamodule using iterable dataset 
 class ChessNewDM(L.LightningDataModule):
     def __init__(self, train_csv:str ="", test_csv:str="",sampling_probabilities = None, mode='train',batch_size:int=   128,K:int = 0):
         super().__init__()
         self.batch_size = batch_size
         self.train_csv = train_csv
         self.test_csv = test_csv
-        # self.train_csv = os.path.join("data","preprocessed","train.csv")
-        # self.test_csv = os.path.join("data","preprocessed","test.csv")
         self.K = K
-           
-    # def setup(self, stage: str):
-    #     sample_K = self.trainer.current_epoch
-    #     self.chess_test = ChessDualDatasetNew(train=False, K=sample_K)
 
     def train_dataloader(self):
         print("Current epoch: ",self.trainer.current_epoch)
@@ -115,9 +107,3 @@ class ChessNewDM(L.LightningDataModule):
         sample_K = self.trainer.current_epoch
         self.chess_train = GMDataset(end_steps=sample_K, train_csv=self.train_csv, test_csv=self.test_csv, sampling_probabilities = None, mode='test')
         return DataLoader(self.chess_test, batch_size=self.batch_size)
-
-    # def predict_dataloader(self):
-    #     sample_K = self.trainer.current_epoch
-    #     self.chess_predict = GMDataset(end_steps=sample_K, train_csv=self.train_csv, test_csv=self.test_csv, sampling_probabilities = None, mode='test')
-    #     return DataLoader(self.chess_predict, batch_size=self.batch_size)
-

@@ -12,4 +12,5 @@ MIN_STEP = 10
 DATA_FILE = os.path.join("data","games.csv")
 SAVE_FILE = os.path.join("lightning_check","trainNew.ckpt")
 TRAIN_PATH = os.path.join("data", "preprocessed","train.csv")
+# TRAIN_PATH = os.path.join("data", "preprocessed","laabhanvi","val_ds.csv")
 TEST_PATH = os.path.join("data", "preprocessed","test.csv")
