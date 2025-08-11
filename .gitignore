@@ -7,6 +7,4 @@ check/
 notebooks/
 scripts/
 
-
-utils.py
 testing.py
