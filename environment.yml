@@ -1,0 +1,11 @@
+name: pytorch-setup
+channels:
+  - defaults
+  - https://repo.anaconda.com/pkgs/main
+  - https://repo.anaconda.com/pkgs/r
+  - https://repo.anaconda.com/pkgs/msys2
+dependencies:
+  - pip
+  - python=3.12
+  - pip:
+      - -r req-torch.txt

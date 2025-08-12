@@ -1,0 +1,15 @@
+--index-url https://download.pytorch.org/whl/cu126
+
+lightning
+tensorboard
+chess
+torch
+torchvision
+torchaudio
+torchmetrics
+numpy
+matplotlib
+pandas
+scikit-learn
+tqdm
+

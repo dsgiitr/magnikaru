@@ -77,7 +77,6 @@ class LitCNN(L.LightningModule):
 
         # Write code to log this multiclass accuracy to tensorboard
         print(f"Accuracy: {self.accuracies}")
-        self.log("test_log_k", self.accuracies, prog_bar=True, on_epoch=True, on_step=False)
         return 
 
     

@@ -11,6 +11,18 @@
 ```
 > pip install -r requirement.txt
 ```
+If the Above doesn't work then install the packages manually
+
+```
+> pip install numpy matplotlib pandas scikit-learn tqdm chess
+```
+
+Pytorch installation (Changes from time to time)
+```
+> pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+> pip install lightning
+```
+
 
 ## download the dataset
 ```
