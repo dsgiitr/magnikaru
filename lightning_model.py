@@ -27,17 +27,17 @@ class LitCNN(L.LightningModule):
     
     def _shared_step(self,batch):
         # Shared code between train val and test
-        features, y_batch = batch
+        k, features, y_batch = batch
         board_batch, info_batch = features
         
         out_probabilities = self(board_batch, info_batch)
         loss = self.criterion(out_probabilities, y_batch)
     
-        return loss, y_batch, out_probabilities
+        return k, loss, y_batch, out_probabilities
         
     def training_step(self, batch, batch_idx):
         # training_step defines the train loop.
-        loss, labels, out_probabilities = self._shared_step(batch=batch)
+        _, loss, labels, out_probabilities = self._shared_step(batch=batch)
         
         self.log("train_loss", loss, prog_bar=True, on_epoch=True, on_step=False)
         self.train_acc(out_probabilities, labels)
@@ -47,11 +47,10 @@ class LitCNN(L.LightningModule):
     
     def test_step(self, batch, batch_idx):
         # not run during training so have to call it later manually
-        loss, labels, out_probabilities = self._shared_step(batch=batch)
-  
+        k, loss, labels, out_probabilities = self._shared_step(batch=batch)
         self.log("test_loss", loss, prog_bar=True, on_epoch=True, on_step=False)
         self.test_acc(out_probabilities, labels)
-        self.log("accuracy", self.test_acc, prog_bar=True, on_epoch=True, on_step=False)    
+        self.log("accuracy", self.test_acc, prog_bar=True, on_epoch=True, on_step=False)  
         
         return loss 
         
@@ -105,5 +104,5 @@ class ChessNewDM(L.LightningDataModule):
     def test_dataloader(self):
         print("Current epoch: ",self.trainer.current_epoch)
         sample_K = self.trainer.current_epoch
-        self.chess_train = GMDataset(end_steps=sample_K, train_csv=self.train_csv, test_csv=self.test_csv, sampling_probabilities = None, mode='test')
+        self.chess_test = GMDataset(end_steps=sample_K, train_csv=self.train_csv, test_csv=self.test_csv, sampling_probabilities = None, mode='test')
         return DataLoader(self.chess_test, batch_size=self.batch_size)

@@ -5,6 +5,8 @@ import os
 
 from model import ChessCNN
 from lightning_model import LitCNN, ChessDM, ChessNewDM
+from utils import GMDataset
+from torch.utils.data import DataLoader
 
 
 input_size = 28*28
@@ -38,10 +40,17 @@ if __name__ == "__main__":
             datamodule=dm
         )
 
-        train_acc = trainer.test(model=model, dataloaders=dm.train_dataloader())[0]['accuracy']
-        test_acc = trainer.test(model=model, dataloaders=dm.test_dataloader())[0]['accuracy']
-        print(f"Test accuracy: {test_acc} | Train accuracy: {train_acc}")
-        
         FILE_NAME = os.path.join("lightning_check",f"train2_it_{iterations}_epoch_{cf.NUM_EPOCHS}_lr_{cf.LEARNING_RATE}.ckpt")
         trainer.save_checkpoint(FILE_NAME)
-        
+    
+    # Testing code
+    acc = dict()
+    for i in range(3):
+        new_data_set = GMDataset(end_steps=i, train_csv=cf.TRAIN_PATH, test_csv=cf.TEST_PATH, sampling_probabilities = None, mode='test')
+        new_test_dataloader = DataLoader(new_data_set, cf.BATCH_SIZE)
+        test_acc = trainer.test(model=model, dataloaders=new_test_dataloader)[0]['accuracy']
+        acc[i] = test_acc
+        print(f"K={i}, Test accuracy: {test_acc}")    
+
+    for k,v in acc.items():
+        print(f"K: {k}, acc: {v}")

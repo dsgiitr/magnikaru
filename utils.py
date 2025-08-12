@@ -67,7 +67,7 @@ def moves_to_tensors_and_info(moves_list, K=0):
     return tensor, info_tensor
 
 class GMDataset(IterableDataset):
-    def __init__(self, end_steps:int, train_csv:str, test_csv:str, sampling_probabilities = None, mode='train'):
+    def __init__(self, end_steps:int, train_csv:str, test_csv:str, sampling_probabilities = None, mode='test'):
         #  end_step = K
         self.end_steps = end_steps
         self.csv_path = train_csv if mode == 'train' else test_csv
@@ -87,12 +87,16 @@ class GMDataset(IterableDataset):
                     # size which will be clipped but won't be logged properly... fix later
                     game, info = pgn_to_tensor(pgn, chosen_end_step)
                     # yield (game.float(), info.float()), label_tensor , chosen_end_step
-                    yield (game.float(), info.float()), label_tensor
-                else:
-                    for i in range(self.end_steps+1): # Can become problematic here if end_step exceeds size of game
+                    yield -1, (game.float(), info.float()), label_tensor
+                elif self.mode == 'test':
+                    # for i in range(self.end_steps+1): # Can become problematic here if end_step exceeds size of game
+                        i = self.end_steps
                         game, info = pgn_to_tensor(pgn, i)
-                        print(f"K: {i}")
-                        yield (game.float(), info.float()), label_tensor
+                        # print(f"K: {i}")
+                        # i is the Value of K
+                        yield i, (game.float(), info.float()), label_tensor
+                else:
+                    print("Invalid Mode provided!")
 
 def pgn_to_tensor(pgn, end_steps):
     game = chess.pgn.read_game(io.StringIO(pgn))
