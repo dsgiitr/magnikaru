@@ -1,6 +1,6 @@
 import os
 
-NUM_EPOCHS   = 1
+NUM_EPOCHS   = 2
 BATCH_SIZE   = 128
 LEARNING_RATE = 1e-3
 NUM_WORKERS = 2

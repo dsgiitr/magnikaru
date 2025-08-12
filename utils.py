@@ -89,8 +89,8 @@ class GMDataset(IterableDataset):
                     # yield (game.float(), info.float()), label_tensor , chosen_end_step
                     yield -1, (game.float(), info.float()), label_tensor
                 elif self.mode == 'test':
-                    # for i in range(self.end_steps+1): # Can become problematic here if end_step exceeds size of game
-                        i = self.end_steps
+                    for i in range(self.end_steps+1): # Can become problematic here if end_step exceeds size of game
+                        # i = self.end_steps
                         game, info = pgn_to_tensor(pgn, i)
                         # print(f"K: {i}")
                         # i is the Value of K
