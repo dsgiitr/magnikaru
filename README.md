@@ -9,7 +9,7 @@
 
 ## install dependancies
 ```
-> pip install -r requirement.txt
+> pip install -r req-torch.txt
 ```
 If the Above doesn't work then install the packages manually
 
