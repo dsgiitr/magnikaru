@@ -7,7 +7,6 @@ import pandas as pd
 import random
 import re
 import io
-
 import config as cf
 
 def moves_to_tensors_and_info(moves_list, K=0):
@@ -66,17 +65,26 @@ def moves_to_tensors_and_info(moves_list, K=0):
 
     return tensor, info_tensor
 
-class GMDataset(IterableDataset):
-    def __init__(self, end_steps:int, train_csv:str, test_csv:str, sampling_probabilities = None, mode='test'):
+class ChessDataset(IterableDataset):
+    def __init__(self, end_steps:int, train_csv:str, test_csv:str,sampling_probabilities = None,scale=2.0, mode='test'):
         #  end_step = K
         self.end_steps = end_steps
+        self.scale=scale
         self.csv_path = train_csv if mode == 'train' else test_csv
-        self.chunksize = 10000
-        self.sampling_probabilities = sampling_probabilities if sampling_probabilities is not None else torch.ones(end_steps+1)/(end_steps+1)
+        self.chunksize = 10_000
+        # self.sampling_probabilities = sampling_probabilities if sampling_probabilities is not None else torch.ones(end_steps+1)/(end_steps+1)
+        if sampling_probabilities is not None:
+            self.sampling_probabilities = sampling_probabilities
+        else:
+           
+            weights = torch.exp(torch.linspace(0, scale, end_steps+1)) #exponential probabilities
+            self.sampling_probabilities = weights / weights.sum()
+
         self.mode = mode  # 'train' or 'test'
 
     def __iter__(self):
         worker_info = get_worker_info()
+        #print(worker_info)
         worker_id = worker_info.id if worker_info else 0
         num_workers = worker_info.num_workers if worker_info else 1
 
@@ -85,11 +93,11 @@ class GMDataset(IterableDataset):
 
                 if idx % num_workers != worker_id:
                     continue
-                
                 label = result
                 label_tensor = torch.tensor([label], dtype=torch.float32)
                 if self.mode == 'train':
-                    chosen_end_step = random.choices(range(self.end_steps+1), weights=self.sampling_probabilities)[0]
+                    weights = self.sampling_probabilities.tolist()
+                    chosen_end_step = random.choices(range(self.end_steps+1), weights=weights)[0]
                     # Potential for inconsistency here, chosen_end_step can be greater than game
                     # size which will be clipped but won't be logged properly... fix later
                     game, info = pgn_to_tensor(pgn, chosen_end_step)
