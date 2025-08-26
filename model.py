@@ -53,7 +53,7 @@ class ChessCNN(nn.Module):
         x = self.block1(board_tensor)    # (batch, 32, 8, 8)
 
         # Info NN
-        info = info_tensor.view(info_tensor.size(0), -1)      # (batch,13)
+        info = info_tensor.view(info_tensor.size(0), -1).float()      # (batch,13)
         info = F.relu(self.info_fc1(info))                    # (batch,128)
         info = F.relu(self.info_fc2(info))                    # (batch,64)
         info_bias = info.view(-1, 1, 8, 8)                    # (batch,1,8,8)

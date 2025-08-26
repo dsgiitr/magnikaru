@@ -128,7 +128,7 @@ class CrossAttention(nn.Module):
         # info_tensor: (N,13)
         # board_tokens: (N,65,8)
 
-        Q = self.W_q(info_tensor).unsqueeze(1).expand(-1, input_token.size(1), -1)  # (N,65,8)
+        Q = self.W_q(info_tensor.float()).unsqueeze(1).expand(-1, input_token.size(1), -1)  # (N,65,8)
         K = self.W_k(input_token)              # N,65,8
         V = self.W_v(input_token)              # N,65,8
 

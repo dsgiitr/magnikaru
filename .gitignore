@@ -9,3 +9,5 @@ scripts/
 
 testing.py
 arya_transformer.py
+.vscode
+my_model.ckpt

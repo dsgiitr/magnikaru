@@ -35,7 +35,7 @@ class InputToken(nn.Module):
         
         input_token=self.pos_emb(board_tensor) # Nx64x8
 
-        info_tensor = info_tensor.view(batch_size, -1) #Nx13
+        info_tensor = info_tensor.view(batch_size, -1).float() #Nx13
         info_tensor=self.info_linear(info_tensor) # Nx7
 
         zero_col = torch.zeros(batch_size, 1, device=info_tensor.device) 
