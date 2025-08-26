@@ -15,6 +15,7 @@ If the Above doesn't work then install the packages manually
 
 ```
 > pip install numpy matplotlib pandas scikit-learn tqdm chess
+> flask flask_cors
 ```
 
 Pytorch installation (Changes from time to time)
