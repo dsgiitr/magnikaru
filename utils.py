@@ -2,7 +2,7 @@ import chess
 import chess.pgn
 import torch
 
-from torch.utils.data import Dataset, DataLoader, IterableDataset
+from torch.utils.data import Dataset, DataLoader, IterableDataset, get_worker_info
 import pandas as pd
 import random
 import re
@@ -76,9 +76,16 @@ class GMDataset(IterableDataset):
         self.mode = mode  # 'train' or 'test'
 
     def __iter__(self):
-        for chunk in pd.read_csv(self.csv_path, chunksize=self.chunksize):
-            for pgn, result in zip(chunk["pgn"], chunk["Result"]):
+        worker_info = get_worker_info()
+        worker_id = worker_info.id if worker_info else 0
+        num_workers = worker_info.num_workers if worker_info else 1
 
+        for chunk in pd.read_csv(self.csv_path, chunksize=self.chunksize):
+            for idx, (pgn, result) in enumerate(zip(chunk["pgn"], chunk["Result"])):
+
+                if idx % num_workers != worker_id:
+                    continue
+                
                 label = result
                 label_tensor = torch.tensor([label], dtype=torch.float32)
                 if self.mode == 'train':
