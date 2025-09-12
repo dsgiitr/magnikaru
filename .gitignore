@@ -6,6 +6,8 @@ lightning_logs/
 check/
 notebooks/
 scripts/
+models/
+
 
 testing.py
 arya_transformer.py
