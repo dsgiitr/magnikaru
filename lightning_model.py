@@ -6,7 +6,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 import os
 import config as cf
-
+import datetime
 from utils import ChessDataset
 
 class LitCNN(L.LightningModule):
@@ -75,13 +75,18 @@ class LitCNN(L.LightningModule):
         self.log("val_loss", loss, prog_bar=True, on_epoch=True, on_step=True)
         return loss
 
-    def on_validation_epoch_end(self):
+    def on_train_epoch_end(self):
+        time= datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        ckpt_path = os.path.join("checkpoints",f"epoch{self.current_epoch}_lr_{cf.LEARNING_RATE}___{time}.ckpt")
         
+        print(ckpt_path)
+        self.trainer.save_checkpoint(ckpt_path)
+
+    def on_validation_epoch_end(self):
         for k_val in self.val_correct.keys():
             acc = self.val_correct[k_val] /  self.val_total[k_val]
             self.log(f"val_acc/k={k_val}", acc, prog_bar=False, on_epoch=True)
 
-       
         self.val_correct.clear()
         self.val_total.clear()
     
@@ -102,10 +107,10 @@ class ChessNewDM(L.LightningDataModule):
         print("Current epoch: ",self.trainer.current_epoch)
         sample_K = self.trainer.current_epoch   
         self.chess_train = ChessDataset(end_steps=sample_K, train_csv=self.train_csv, test_csv=self.test_csv, sampling_probabilities = None, mode='train')
-        return DataLoader(self.chess_train, batch_size=self.batch_size, num_workers=cf.NUM_WORKERS) # There is also a drop_last parameters to drop the non-full batch
+        return DataLoader(self.chess_train, batch_size=self.batch_size, num_workers=cf.NUM_WORKERS,persistent_workers=True) # There is also a drop_last parameters to drop the non-full batch
 
     def val_dataloader(self):
         print("Current epoch: ",self.trainer.current_epoch)
         sample_K = cf.NUM_EPOCHS - 1
         self.chess_val = ChessDataset(end_steps=sample_K, train_csv=self.train_csv, test_csv=self.test_csv, sampling_probabilities = None, mode='test')
-        return DataLoader(self.chess_val, batch_size=self.batch_size,num_workers=cf.NUM_WORKERS)
+        return DataLoader(self.chess_val, batch_size=self.batch_size,num_workers=cf.NUM_WORKERS,persistent_workers=True)
