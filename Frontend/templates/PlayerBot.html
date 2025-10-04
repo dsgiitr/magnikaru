@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Magnikaru | Play!</title>
+    <!-- <base href="../" /> -->
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.css"
+        integrity="sha384-47VeTDpmy4yT21gKPXQcLQYQZwlmz27gEH5NTrOmTk3G/SGvMyltclOW/Q8uE+sL" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='assets/magnikaru.png') }}">
+</head>
+
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.12.1/chess.js"
+        integrity="sha384-8sJV/krC8iV2g7t0PolQxFVckDtxhfM5gNHNAFPG2ZS/bScudOjfsB8ewhG2xle8"
+        crossorigin="anonymous"></script>
+    <div class="wrapper">
+        <h1 class="heading">
+            MAGNIKARU!
+        </h1>
+        <div class="container">
+            <div class="board">
+                <div class="board_eval">
+                    <div id="evalBar" class="eval-bar">
+                        <div class="eval-bar-white"></div>
+                    </div>
+                    <div id="myBoard" style="width: 30rem;"></div>
+                </div>
+
+                <div class="gameStatus">
+                    <!-- <h4>Game Status:</h4> -->
+                    <p id="gameStatus"></p>
+                </div>
+            </div>
+            <div class="stats">
+                <!-- <h4>Game PGN:</h4>
+                <div id="gamePGN"></div> -->
+                <!-- <h4>Game FEN:</h4>
+                <div id="gameFEN"></div> -->
+                <div id="pgnTable">
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.js"
+        integrity="sha384-/KwQCjA1GWovZNV3QDVtvSMDzO4reGgarF/RqHipr7hIUElH3r5zNl9WEPPOBRIF"
+        crossorigin="anonymous"></script>
+    <!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.js" integrity="sha384-L0SnMpUnYUX6GNzeu549NqRJHDc9gljfSbFwmJFLZRNJiKLrLI+W9Cpw/DgHy5Vu" crossorigin="anonymous"></script>
+-->
+    <script src="../static/scripts/index.js"></script>
+</body>
+
+</html>

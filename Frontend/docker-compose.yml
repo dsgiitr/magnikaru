@@ -1,0 +1,10 @@
+services:
+  magnikaru:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=9000
+    ports:
+      - 9000:9000
+    
