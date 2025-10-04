@@ -41,6 +41,16 @@ Make sure to change the path of the data file in ```config.py```
 
 3. Run ```lightning_main.py``` to start training the model!
 
+## ChessServer 
+
+Make sure you have installed the dependancies correctly
+
+Start the server on port 8900 (can be changed in app.py)
+```
+> python app.py
+```
+
+
 ## NOTE:
 1. Make sure that you have the right version of Cuda installed inside the environment. Use use the following commands to check for required informations!
 ```
