@@ -3,8 +3,9 @@ import torch
 import lightning as L
 import config as cf
 import os
+import datetime
 
-from Transformer_cross_attention import ChessTransformerClassification
+from model import ChessCNN
 from lightning_model import LitCNN, ChessNewDM
 from utils import ChessDataset
 from torch.utils.data import DataLoader
@@ -23,7 +24,7 @@ torch.set_float32_matmul_precision('medium')
 if __name__ == "__main__":
     # dm = ChessDM(batch_size=cf.BATCH_SIZE)
     dm = ChessNewDM(train_csv=cf.TRAIN_PATH,test_csv=cf.TEST_PATH,batch_size=cf.BATCH_SIZE)
-    pytorchModel = ChessTransformerClassification()
+    pytorchModel = ChessCNN()
     # checkpoint_evaluation_check=LitCNN.load_from_checkpoint("Laabhanvi_CNN.ckpt", model=pytorchModel)
     model = LitCNN(model=pytorchModel, lr=learning_rate)
     
@@ -42,6 +43,6 @@ if __name__ == "__main__":
         )
         # test_acc = trainer.test(model=model, dataloaders=dm.test_dataloader())
         # print(f"Test accuracy: {test_acc}")
-
-        FILE_NAME = os.path.join("lightning_check",f"train2_it_{iterations}_epoch_{cf.NUM_EPOCHS}_lr_{cf.LEARNING_RATE}.ckpt")
+        time= datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        FILE_NAME = os.path.join("lightning_check",f"train2_it_{iterations}_epoch_{cf.NUM_EPOCHS}_lr_{cf.LEARNING_RATE}_{time}.ckpt")
         trainer.save_checkpoint(FILE_NAME)
