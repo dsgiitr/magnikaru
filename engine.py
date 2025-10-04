@@ -7,8 +7,9 @@ from Transformer_cross_attention import ChessTransformerClassification
 import torch
 
 
-pytorch_model = ChessTransformerClassification()
-model = LitCNN.load_from_checkpoint("my_model.ckpt", model=pytorch_model)
+pytorch_model = ChessCNN()
+# model = LitCNN.load_from_checkpoint("amx_transformer_cross_attention_epoch_10_lr_0.001_2025-08-27_09-06-38.ckpt", model=pytorch_model)
+model = LitCNN.load_from_checkpoint("Laabhanvi_CNN_epoch_10_lr_0.001_2025-08-28_16-31-16.ckpt", model=pytorch_model)
 
 total_model_time = 0.0
 total_time = 0.0
