@@ -5,7 +5,7 @@ import config as cf
 import os
 import datetime
 
-from model import ChessCNN
+from Transformer_learned_embedding import ChessTransformerClassification
 from lightning_model import LitCNN, ChessNewDM
 from utils import ChessDataset
 from torch.utils.data import DataLoader
@@ -24,7 +24,7 @@ torch.set_float32_matmul_precision('medium')
 if __name__ == "__main__":
     # dm = ChessDM(batch_size=cf.BATCH_SIZE)
     dm = ChessNewDM(train_csv=cf.TRAIN_PATH,test_csv=cf.TEST_PATH,batch_size=cf.BATCH_SIZE)
-    pytorchModel = ChessCNN()
+    pytorchModel = ChessTransformerClassification()
     # checkpoint_evaluation_check=LitCNN.load_from_checkpoint("Laabhanvi_CNN.ckpt", model=pytorchModel)
     model = LitCNN(model=pytorchModel, lr=learning_rate)
     

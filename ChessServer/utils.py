@@ -93,7 +93,7 @@ class ChessDataset(IterableDataset):
 
                 if idx % num_workers != worker_id:
                     continue
-                label = result
+                label = int(result[0])
                 label_tensor = torch.tensor([label], dtype=torch.float32)
                 if self.mode == 'train':
                     weights = self.sampling_probabilities.tolist()

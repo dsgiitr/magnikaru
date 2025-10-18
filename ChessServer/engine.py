@@ -3,13 +3,13 @@ import chess
 from utils import pgn_to_tensor
 from model import ChessCNN
 from lightning_model import LitCNN
-from Transformer_cross_attention import ChessTransformerClassification
+from Transformer_learned_embedding import ChessTransformerClassification
 import torch
 import os
 
 
-pytorch_model = ChessCNN()
-model_path = os.path.join("models","Laabhanvi_CNN_epoch_10_lr_0.001_2025-08-28_16-31-16.ckpt")
+pytorch_model = ChessTransformerClassification()
+model_path = os.path.join("checkpoint","CCLR_learned_embedding_epoch9_lr_0.001___2025-08-28_04-53-14.ckpt")
 # model = LitCNN.load_from_checkpoint("amx_transformer_cross_attention_epoch_10_lr_0.001_2025-08-27_09-06-38.ckpt", model=pytorch_model)
 model = LitCNN.load_from_checkpoint(model_path, model=pytorch_model)
 
