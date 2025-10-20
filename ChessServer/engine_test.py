@@ -2,9 +2,9 @@
 import time
 import chess
 from utils import pgn_to_tensor
-from model import ChessCNN
+from ChessServer.cnn import ChessCNN
 from lightning_model import LitCNN
-from Transformer_cross_attention import ChessTransformerClassification
+from transformer_cross_attention import ChessTransformerClassification
 import torch
 
 

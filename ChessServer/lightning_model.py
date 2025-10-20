@@ -101,16 +101,15 @@ class ChessNewDM(L.LightningDataModule):
         self.batch_size = batch_size
         self.train_csv = train_csv
         self.test_csv = test_csv
-        self.K = K
 
     def train_dataloader(self):
         print("Current epoch: ",self.trainer.current_epoch)
-        sample_K = self.trainer.current_epoch   
+        sample_K = 2*self.trainer.current_epoch + 1  
         self.chess_train = ChessDataset(end_steps=sample_K, train_csv=self.train_csv, test_csv=self.test_csv, sampling_probabilities = None, mode='train')
         return DataLoader(self.chess_train, batch_size=self.batch_size, num_workers=cf.NUM_WORKERS,persistent_workers=True) # There is also a drop_last parameters to drop the non-full batch
 
     def val_dataloader(self):
         print("Current epoch: ",self.trainer.current_epoch)
-        sample_K = cf.NUM_EPOCHS - 1
+        sample_K = 2*(cf.NUM_EPOCHS) - 1
         self.chess_val = ChessDataset(end_steps=sample_K, train_csv=self.train_csv, test_csv=self.test_csv, sampling_probabilities = None, mode='test')
         return DataLoader(self.chess_val, batch_size=self.batch_size,num_workers=cf.NUM_WORKERS,persistent_workers=True)

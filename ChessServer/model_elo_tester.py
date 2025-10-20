@@ -2,9 +2,9 @@
 import time
 import chess
 from utils import pgn_to_tensor
-from model import ChessCNN
+from ChessServer.cnn import ChessCNN
 from lightning_model import LitCNN
-from Transformer_learned_embedding import ChessTransformerClassification
+from transformer_learned_embedding import ChessTransformerClassification
 import torch
 import config as cf
 

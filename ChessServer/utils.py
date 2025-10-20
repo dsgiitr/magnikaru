@@ -1,7 +1,6 @@
 import chess
 import chess.pgn
 import torch
-
 from torch.utils.data import Dataset, DataLoader, IterableDataset, get_worker_info
 import pandas as pd
 import random
@@ -76,9 +75,14 @@ class ChessDataset(IterableDataset):
         if sampling_probabilities is not None:
             self.sampling_probabilities = sampling_probabilities
         else:
-           
-            weights = torch.exp(torch.linspace(0, scale, end_steps+1)) #exponential probabilities
-            self.sampling_probabilities = weights / weights.sum()
+
+            weights = torch.exp(torch.linspace(0, scale, end_steps//2+1)) #exponential probabilities\
+            new_weights=[]
+            for w in weights:
+                new_weights.append(w)
+                new_weights.append(w)
+            new_weights_tensor = torch.tensor(new_weights, dtype=torch.float32)
+            self.sampling_probabilities = new_weights_tensor / new_weights_tensor.sum()
 
         self.mode = mode  # 'train' or 'test'
 
@@ -93,7 +97,7 @@ class ChessDataset(IterableDataset):
 
                 if idx % num_workers != worker_id:
                     continue
-                label = int(result[0])
+                label = result
                 label_tensor = torch.tensor([label], dtype=torch.float32)
                 if self.mode == 'train':
                     weights = self.sampling_probabilities.tolist()

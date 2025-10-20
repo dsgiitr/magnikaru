@@ -1,19 +1,13 @@
-
 import torch
 import lightning as L
 import config as cf
 import os
 import datetime
-
-from Transformer_learned_embedding import ChessTransformerClassification
+from transformer_learned_embedding import ChessTransformerClassification
 from lightning_model import LitCNN, ChessNewDM
 from utils import ChessDataset
 from torch.utils.data import DataLoader
 
-
-input_size = 28*28
-hidden_size = 100
-num_classes = 10
 num_epochs = cf.NUM_EPOCHS
 batch_size = cf.BATCH_SIZE
 learning_rate = cf.LEARNING_RATE

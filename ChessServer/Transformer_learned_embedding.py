@@ -1,4 +1,4 @@
-#Transformer_learned_embedding
+#transformer_learned_embedding
 import torch
 from torch import nn
 import torch.nn.functional as F

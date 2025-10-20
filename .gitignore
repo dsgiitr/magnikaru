@@ -14,3 +14,9 @@
 **/arya_transformer.py
 **/.vscode
 **/my_model.ckpt
+**/checkpoint/
+**/stockfish-android-armv8\stockfish/
+**/stockfish-windows-x86-64-avx2/
+**/stockfish-windows-x86-64-avx2.zip/
+
+

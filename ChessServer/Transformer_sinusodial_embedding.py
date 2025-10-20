@@ -1,4 +1,4 @@
-#Transformer_sinusodial_embedding
+#transformer_sinusodial_embedding
 import torch
 import math
 

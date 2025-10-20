@@ -1,4 +1,4 @@
-#Transformer_zeroth_token_metadata
+#transformer_zeroth_token_metadata
 import torch
 from torch import nn
 import torch.nn.functional as F

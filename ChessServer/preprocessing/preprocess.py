@@ -2,7 +2,7 @@ import torch
 import pandas as pd
 from utils import moves_to_tensors_and_info
 import os
-from model import ChessDualDataset
+from ChessServer.cnn import ChessDualDataset
 from torch.utils.data import DataLoader, random_split
 import config as cf
 
