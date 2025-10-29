@@ -8,61 +8,6 @@ import re
 import io
 import config as cf
 
-def moves_to_tensors_and_info(moves_list, K=0):
-    board = chess.Board()
-
-    # TODO: try better error handling
-    if(len(moves_list) <= K):
-      return None, None # is there a better way to do this?
-    trimmed_moves = moves_list[:-K] if K > 0 else moves_list
-
-
-    for san in trimmed_moves:
-        board.push_san(san)
-
-    # tensor [channel, row, col] => shape (7, 8, 8)
-    tensor = torch.zeros((8, 8, 8), dtype=torch.int8)
-
-    next_to_move_flag = 0 if board.turn == chess.WHITE else 1
-    tensor[0, :, :] = next_to_move_flag
-
-    for row in range(8):
-        for col in range(8):
-            rank_index = 7 - row
-            file_index = col
-            sq = chess.square(file_index, rank_index)
-            piece = board.piece_at(sq)
-            if piece is not None:
-                color_flag = 0 if piece.color == chess.WHITE else 1
-                tensor[1, row, col] = color_flag
-
-                channel_idx = 2 + (piece.piece_type - 1)
-                tensor[channel_idx, row, col] = 1
-            else:
-                tensor[1, row, col] = 0  # empty = default 0
-
-    # Remove turn info (added to info vector)
-    tensor = tensor[1:]  # shape: (7, 8, 8)
-
-    # info_tensor: shape (13, 1)
-    info_tensor = torch.zeros((13, 1), dtype=torch.int8)
-
-    # index 0: who's turn
-    info_tensor[0, 0] = next_to_move_flag
-
-    # index 1-4: castling rights
-    info_tensor[1, 0] = int(board.has_kingside_castling_rights(chess.WHITE))
-    info_tensor[2, 0] = int(board.has_queenside_castling_rights(chess.WHITE))
-    info_tensor[3, 0] = int(board.has_kingside_castling_rights(chess.BLACK))
-    info_tensor[4, 0] = int(board.has_queenside_castling_rights(chess.BLACK))
-
-    # index 5-12: en passant flags for files a–h (for the side to move)
-    ep_square = board.ep_square
-    if ep_square is not None:
-        file_index = chess.square_file(ep_square)
-        info_tensor[5 + file_index, 0] = 1
-
-    return tensor, info_tensor
 
 class ChessDataset(IterableDataset):
     def __init__(self, end_steps:int, train_csv:str, test_csv:str,sampling_probabilities = None,scale=2.0, mode='test'):
