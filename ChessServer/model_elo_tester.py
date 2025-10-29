@@ -1,16 +1,13 @@
-
 import time
 import chess
 from utils import pgn_to_tensor
-from ChessServer.cnn import ChessCNN
 from lightning_model import LitCNN
-from transformer_learned_embedding import ChessTransformerClassification
+from models.transformer_learned_embedding import ChessTransformerClassification
 import torch
 import config as cf
 
-MODEL_PATH = "checkpoint/kratos_checkpoint/checkpoints/epoch21_lr_0.001___2025-10-04_08-39-35.ckpt"
-# Stockfish path must be verified against your system (using r-string for clean Windows path)
-STOCKFISH_PATH = r"C:\Laabhanvi\DSG\magnikaru\magnikaru-monorepo\stockfish-windows-x86-64-avx2\stockfish\stockfish-windows-x86-64-avx2.exe"
+MODEL_PATH = "./checkpoints/epoch14_lr_0.001___2025-10-23_06-59-53.ckpt"
+STOCKFISH_PATH = "./stockfish-ubuntu-x86-64-avx2"
 
 pytorch_model = ChessTransformerClassification()
 model = LitCNN.load_from_checkpoint(MODEL_PATH, model=pytorch_model)
@@ -193,6 +190,7 @@ class ModelTester:
         engine.quit()
 
         result = board.result()
+        print(chess.pgn.Game.from_board(board))
         if result == '1-0':
             return 1.0 if model_is_white else 0.0 # Model won
         elif result == '0-1':
@@ -237,7 +235,7 @@ class ModelTester:
 tester = ModelTester(
             model=model,
             stockfish_path=STOCKFISH_PATH,
-            model_depth=2
+            model_depth=3
         )
 tester.run_tournament(
             elo_ratings=elo_test_ratings,

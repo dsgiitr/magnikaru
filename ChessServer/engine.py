@@ -3,7 +3,7 @@ import chess
 from utils import pgn_to_tensor
 from ChessServer.cnn import ChessCNN
 from lightning_model import LitCNN
-from transformer_learned_embedding import ChessTransformerClassification
+from models.transformer_learned_embedding import ChessTransformerClassification
 import torch
 import os
 
