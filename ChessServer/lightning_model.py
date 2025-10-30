@@ -77,7 +77,7 @@ class LitCNN(L.LightningModule):
 
     def on_train_epoch_end(self):
         time= datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        ckpt_path = os.path.join("checkpoints",f"epoch{self.current_epoch}_lr_{cf.LEARNING_RATE}___{time}.ckpt")
+        ckpt_path = os.path.join("checkpoints",f"{cf.TRAIN_PATH}_epoch{self.current_epoch}_lr_{cf.LEARNING_RATE}___{time}.ckpt")
         
         print(ckpt_path)
         self.trainer.save_checkpoint(ckpt_path)

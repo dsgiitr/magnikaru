@@ -29,8 +29,8 @@ with open(input_path, "r", encoding="latin1") as pgn_file:
         headers = dict(game.headers)
 
         result = headers.get("Result", "")
-        if result not in ["1-0", "0-1"]:
-            continue
+        # if result not in ["1-0", "0-1"]:
+        #     continue
         binary_result = 1 if result == "1-0" else 0
 
         exporter = chess.pgn.StringExporter(columns=None, variations=False, comments=False)

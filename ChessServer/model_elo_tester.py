@@ -6,7 +6,7 @@ from models.transformer_learned_embedding import ChessTransformerClassification
 import torch
 import config as cf
 
-MODEL_PATH = "./checkpoints/epoch14_lr_0.001___2025-10-23_06-59-53.ckpt"
+MODEL_PATH = "./checkpoints/epoch14_lr_0.001___2025-10-30_13-25-27.ckpt"
 STOCKFISH_PATH = "./stockfish-ubuntu-x86-64-avx2"
 
 pytorch_model = ChessTransformerClassification()
@@ -134,9 +134,10 @@ def predict_move(board, model, color, depth=2, width=5):
     # return best_move
 
     moves, scores = beam_search_minimax([board], depth, color, model, width)
-    
+    count=9
     if moves and moves[0] is not None:
-        print("ual", scores[0])
+        print("probab",{count} scores[0])
+        count=count+1
         return moves[0]
     elif board.legal_moves:
         return list(board.legal_moves)[0]

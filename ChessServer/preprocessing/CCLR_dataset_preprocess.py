@@ -30,7 +30,7 @@ with open(input_path, "r", encoding="latin1", errors="ignore") as in_file, \
 
         total_games += 1
         # print("game: ", total_games)
-        ELO difference check
+        # ELO difference check
         try:
             w_elo = int(game.headers.get("WhiteElo"))
             b_elo = int(game.headers.get("BlackElo"))
