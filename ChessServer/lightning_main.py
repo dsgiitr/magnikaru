@@ -33,8 +33,8 @@ if __name__ == "__main__":
         
         trainer.fit(
             model=model,
-            datamodule=dm
-            # ckpt_path=cf.CHECKPOINT_PATH
+            datamodule=dm,
+            ckpt_path=cf.CHECKPOINT_PATH
         )
         # test_acc = trainer.test(model=model, dataloaders=dm.test_dataloader())
         # print(f"Test accuracy: {test_acc}")

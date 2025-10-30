@@ -6,7 +6,7 @@ from lightning_model import LitCNN
 from models.transformer_learned_embedding import ChessTransformerClassification
 import torch
 import os
-
+import config as cf
 
 pytorch_model = ChessTransformerClassification()
 model_path = os.path.join("checkpoint","CCLR_learned_embedding_epoch9_lr_0.001___2025-08-28_04-53-14.ckpt")

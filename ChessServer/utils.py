@@ -42,34 +42,39 @@ class ChessDataset(IterableDataset):
 
                 if idx % num_workers != worker_id:
                     continue
-                label = result
+                if type(result) == int:
+                    label = result
+                else:
+                    label =int(result[0])
                 label_tensor = torch.tensor([label], dtype=torch.float32)
                 if self.mode == 'train':
                     weights = self.sampling_probabilities.tolist()
                     chosen_end_step = random.choices(range(self.end_steps+1), weights=weights)[0]
                     # Potential for inconsistency here, chosen_end_step can be greater than game
                     # size which will be clipped but won't be logged properly... fix later
-                    game, info = pgn_to_tensor(pgn, chosen_end_step)
+                    game, info = pgn_to_tensor(pgn, chosen_end_step, cf.MIN_STEP)
                     # yield (game.float(), info.float()), label_tensor , chosen_end_step
                     yield -1, (game.float(), info.float()), label_tensor
                 elif self.mode == 'test':
                     for i in range(self.end_steps+1): # Can become problematic here if end_step exceeds size of game
                         # i = self.end_steps
-                        game, info = pgn_to_tensor(pgn, i)
+                        game, info = pgn_to_tensor(pgn, i, cf.MIN_STEP)
                         # print(f"K: {i}")
                         # i is the Value of K
                         yield i, (game.float(), info.float()), label_tensor
                 else:
                     print("Invalid Mode provided!")
 
-def pgn_to_tensor(pgn, end_steps):
+def pgn_to_tensor(pgn, end_steps, min_step=None):
     game = chess.pgn.read_game(io.StringIO(pgn))
     board = game.board()
 
     total_moves = sum(1 for _ in game.mainline_moves())
     
-    min_step = cf.MIN_STEP
-    moves_required = max(min_step, total_moves - end_steps)
+    if min_step:
+        moves_required = max(min_step, total_moves - end_steps)
+    else:
+        moves_required = total_moves - end_steps
 
     count = 0
     for move in game.mainline_moves():

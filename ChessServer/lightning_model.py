@@ -110,6 +110,6 @@ class ChessNewDM(L.LightningDataModule):
 
     def val_dataloader(self):
         print("Current epoch: ",self.trainer.current_epoch)
-        sample_K = 2*(cf.NUM_EPOCHS) - 1
+        sample_K = 2 * (cf.NUM_EPOCHS-1) + 1
         self.chess_val = ChessDataset(end_steps=sample_K, train_csv=self.train_csv, test_csv=self.test_csv, sampling_probabilities = None, mode='test')
         return DataLoader(self.chess_val, batch_size=self.batch_size,num_workers=cf.NUM_WORKERS,persistent_workers=True)

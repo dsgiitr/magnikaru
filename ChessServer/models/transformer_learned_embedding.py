@@ -63,7 +63,7 @@ class SingleHeadAttention(nn.Module):
         K= self.W_k(input_token)          
         V= self.W_v(input_token)
 
-        attention_scores=torch.matmul(Q,K.transpose(-2,-1)) / 8**0.5 # Q.K^T / root(64)   # Nx65x65
+        attention_scores=torch.matmul(Q,K.transpose(-2,-1)) / 8**0.5 # Q.K^T / root(8)   # Nx65x65
         weights=F.softmax(attention_scores,dim=-1)
         final=torch.matmul(weights,V) # Nx65x8
         return self.out(final)

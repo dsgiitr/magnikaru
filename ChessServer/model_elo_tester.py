@@ -10,7 +10,7 @@ MODEL_PATH = "./checkpoints/epoch14_lr_0.001___2025-10-23_06-59-53.ckpt"
 STOCKFISH_PATH = "./stockfish-ubuntu-x86-64-avx2"
 
 pytorch_model = ChessTransformerClassification()
-model = LitCNN.load_from_checkpoint(MODEL_PATH, model=pytorch_model)
+model = LitCNN.load_from_checkpoint(MODEL_PATH, model=pytorch_model).cuda()
 
 elo_test_ratings = [1350, 1400, 1450]
 
@@ -126,16 +126,17 @@ def beam_search_minimax(root_boards, depth, color, model, k=5):
 
     return best_moves, best_scores
 
-def predict_move(board, model, color, depth=2, k=5):
+def predict_move(board, model, color, depth=2, width=5):
     if board.is_game_over():
         return None
     
     # best_move, _ = alpha_beta(board, depth, float("-inf"), float("inf"), color, model, root=True)
     # return best_move
 
-    moves, scores = beam_search_minimax([board], depth, color, model, k)
+    moves, scores = beam_search_minimax([board], depth, color, model, width)
     
     if moves and moves[0] is not None:
+        print("ual", scores[0])
         return moves[0]
     elif board.legal_moves:
         return list(board.legal_moves)[0]
@@ -144,7 +145,7 @@ def predict_move(board, model, color, depth=2, k=5):
 
 class ModelTester:
     """chess games against Stockfish at diff Elo ratings."""
-    def __init__(self, model, stockfish_path, model_depth=2):
+    def __init__(self, model, stockfish_path, model_depth=2, width = 5):
         self.model = model
         self.stockfish_path = stockfish_path
         self.model_depth = model_depth
@@ -152,6 +153,8 @@ class ModelTester:
         self.total_wins = 0
         self.total_draws = 0
         self.total_losses = 0
+        self.width = width
+
 
     def run_game(self, stockfish_elo, model_is_white):
         """
@@ -171,7 +174,7 @@ class ModelTester:
             if i%2 == model_color:
                 # start_time = time.perf_counter()
 
-                result = engine.play(board, chess.engine.Limit(time=0.1))
+                result = engine.play(board, chess.engine.Limit(time=0.01))
                 # print(f"Move: {result.move}, move type: {type(result.move)}")
                 board.push(result.move)
 
@@ -180,8 +183,13 @@ class ModelTester:
             else:
                 # start_time = time.perf_counter()
 
-                my_move = predict_move(board, model, model_color)
-                board.push(my_move)
+                if i<16:
+                    result = engine.play(board, chess.engine.Limit(time=0.1))
+                    # print(f"Move: {result.move}, move type: {type(result.move)}")
+                    board.push(result.move)
+                else:
+                    my_move = predict_move(board, model, model_color, depth=self.model_depth, width = self.width)
+                    board.push(my_move)
 
                 # end_time = time.perf_counter()
                 # print(f"Time taken: {end_time - start_time:.4f} seconds")
@@ -235,7 +243,8 @@ class ModelTester:
 tester = ModelTester(
             model=model,
             stockfish_path=STOCKFISH_PATH,
-            model_depth=3
+            model_depth=5,
+            width=4
         )
 tester.run_tournament(
             elo_ratings=elo_test_ratings,

@@ -7,7 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1hqvBIjvz4yjG9mirDPpU-Q5XFcaXoxdP
 """
 
-!pip install python-chess
 import io
 import chess.pgn
 import pandas as pd
