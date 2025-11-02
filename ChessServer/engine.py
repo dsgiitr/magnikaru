@@ -2,13 +2,17 @@ import time
 import chess
 from utils import pgn_to_tensor
 from ChessServer.cnn import ChessCNN
+from models.transformers import ChessTransformerClassification
 from lightning_model import LitCNN
-from models.transformer_learned_embedding import ChessTransformerClassification
 import torch
 import os
 import config as cf
 
-pytorch_model = ChessTransformerClassification()
+pytorch_model = ChessTransformerClassification(
+        pos_type="fixed",
+        attention_type="cross",
+        num_layers=4
+    )
 model_path = os.path.join("checkpoint","CCLR_learned_embedding_epoch9_lr_0.001___2025-08-28_04-53-14.ckpt")
 # model = LitCNN.load_from_checkpoint("amx_transformer_cross_attention_epoch_10_lr_0.001_2025-08-27_09-06-38.ckpt", model=pytorch_model)
 model = LitCNN.load_from_checkpoint(model_path, model=pytorch_model)

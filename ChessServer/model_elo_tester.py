@@ -2,14 +2,18 @@ import time
 import chess
 from utils import pgn_to_tensor
 from lightning_model import LitCNN
-from models.transformer_learned_embedding import ChessTransformerClassification
+from models.transformers import ChessTransformerClassification
 import torch
 import config as cf
 
 MODEL_PATH = "./checkpoints/epoch14_lr_0.001___2025-10-30_13-25-27.ckpt"
 STOCKFISH_PATH = "./stockfish-ubuntu-x86-64-avx2"
 
-pytorch_model = ChessTransformerClassification()
+pytorch_model = ChessTransformerClassification(
+        pos_type="fixed",
+        attention_type="cross",
+        num_layers=4
+    )
 model = LitCNN.load_from_checkpoint(MODEL_PATH, model=pytorch_model).cuda()
 
 elo_test_ratings = [1350, 1400, 1450]
